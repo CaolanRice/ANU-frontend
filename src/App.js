@@ -1,39 +1,17 @@
 import './App.css';
-import api from "./api/axiosConfig"
-import { useState, useEffect } from 'react';
+// import api from "./api/axiosConfig"
+// import { useState, useEffect } from 'react';
+// import {Routes, Route} from 'react-router-dom';
+import GodisList from './components/GodisList';
 
-function App() {
 
-  //destructed array from useState hook
-  const [godis, setGodis] = useState();
-
-  //get request returns array of godis data
-  const getGodis = async () =>{
-
-  try{
-
-    const response = await api.get("/api/v1/godis");
-    console.log(response.data);
-    setGodis(response.data);
-
-  } catch(err){
-    console.log(err);
-  }
-
-  }
-
-  //logs results returned from call from endpoint
-
-  //getGodis func executed on app load
-  useEffect(() => {
-    getGodis();
-  },[])
-
-  return (
-    <div className="App">
+const App = ()=> {
+    return (
+      <div>
+        <GodisList/>
+      </div>
+    );
+    };
   
-    </div>
-  );
-}
 
 export default App;
