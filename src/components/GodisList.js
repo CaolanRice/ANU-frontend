@@ -5,7 +5,7 @@ const GodisList = () => {
     const[godis, setGodis] = useState([]);
 
     useEffect(() => {
-        axios.get('api/v1/godis')
+        axios.get('/godis')
             .then(response => {
                 setGodis(response.data);
             })
@@ -15,13 +15,15 @@ const GodisList = () => {
     }, []);
 
 
+
     return (
         <div>
           <h1>Current godis</h1>
           <ul>
             {godis.map(godis => (
               <li key={godis.id}>
-                Name: {godis.name} - Type: {godis.type} - Rating: {godis.rating} - Attributes: {godis.attributes}
+                {/* join the elements in attributes list with "," if not null */}
+                Name: {godis.name} - Type: {godis.type} - Rating: {godis.rating} - Attributes: {godis.attributes ? godis.attributes.join(",") : ""} 
               </li>
             ))}
           </ul>

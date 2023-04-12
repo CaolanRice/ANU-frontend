@@ -10,7 +10,7 @@ const DeleteGodis = ({ godisId }) => {
   const handleDelete = () => {
     axios
         //godisId prop passed as param to this component to make up the delete url
-      .delete(`http://localhost:8080/api/v1/godis/delete/${godisId}`)
+      .delete(`http://localhost:8080/api/v1/godis/delete/6436eacb0850f257ef93e502`)
       .then((response) => {
         console.log(response);
         setSuccess(true);
