@@ -1,12 +1,13 @@
 import axios from "../api/axiosConfig";
 
+//Service class for making http requests
 class GodisDataService {
     getAll() {
       return axios.get("/godis");
     }
 
-    getByName(name) {
-        return axios.get(`/godis?title=${name}`);
+    findByName(name) {
+        return axios.get(`/godis/name/${name}`);
       }
   
     getById(id) {

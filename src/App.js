@@ -14,7 +14,7 @@ class App extends Component {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/tutorials" className="navbar-brand">
+          <a href="/" className="navbar-brand">
             Home
           </a>
           <div className="navbar-nav mr-auto">
@@ -34,7 +34,6 @@ class App extends Component {
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<GodisList/>} />
-            <Route path="/delete" element={<GodisList/>} />
             <Route path="/add" element={<AddGodis/>} />
             <Route path="/delete/:id" element={<DeleteGodis/>} />
           </Routes>
