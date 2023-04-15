@@ -1,109 +1,75 @@
-import React, { Component } from "react";
-import GodisDataService from "../services/GodisService";
+import React, { useState } from "react";
+import GodisService from "../services/GodisService";
 
-export default class AddGodis extends Component {
+const AddGodis = () => {
     //initialize default values
-  constructor(props) {
-    super(props);
-    this.onChangeName = this.onChangeName.bind(this);
-    this.onChangeType = this.onChangeType.bind(this);
-    this.onChangeRating = this.onChangeRating.bind(this);
-    this.onChangeAttributes = this.onChangeAttributes.bind(this);
-    this.saveGodis = this.saveGodis.bind(this);
-    this.newGodis = this.newGodis.bind(this);
-
-    this.state = {
+  const initialState = {
       id: null,
       name: "", 
       type: "",
       rating: 0.0, 
       attributes: [],
 
-      submitted : false
-
-    };
   }
+  //state variables
+  const [godis, setGodis] = useState(initialState);
+  const [submitted, setSubmitted] = useState(false);
 
-  //event handlers
-  onChangeName(event) {
-    this.setState({
-      name: event.target.value
-    });
-  }
 
-  onChangeType(event) {
-    this.setState({
-      type: event.target.value
-    });
-  }
-
-  onChangeRating = (event) => {
-    const value = parseFloat(event.target.value); 
-    this.setState({ 
-        rating: value });
-  }
-
-  onChangeAttributes(event) {
-    const value = event.target.value;
-    const attributesArray = value.split(","); //splits input values 
-    this.setState({
-      attributes: attributesArray
-    });
-  }
-
-  //on submit
-  saveGodis() {
-    //create data object
+  const inputHandler = event => {
+    const { name, value } = event.target;
+    if (name === 'attributes') {
+        // Split the input value to create array of attributes
+        const attributes = value.split(',');
+        setGodis({ ...godis, [name]: attributes });
+    } else {
+        setGodis({ ...godis, [name]: value });
+    }
+};
+  //save form data and create obj with state vals
+  const saveGodis = () => {
     var data = {
-      name: this.state.name,
-      type: this.state.type,
-      rating: this.state.rating,
-      attributes: this.state.attributes
+      name: godis.name,
+      type: godis.type,
+      rating: godis.rating,
+      attributes: godis.attributes
     };
-
-    //pass data obj to create method in service class
-    GodisDataService.create(data)
+  
+  //calls create api to make new godis obj with form data
+  GodisService.create(data)
+      //update form state wih response data
       .then(response => {
-        this.setState({
+        setGodis({
           id: response.data.id,
           name: response.data.name,
           type: response.data.type,
           rating: response.data.rating,
-          attributes: response.data.attributes,
-
-          submitted: true
-
+          attributes: response.data.atrributes
+          
         });
+        setSubmitted(true);
         console.log(response.data);
       })
-      .catch(e => {
-        console.log(e);
+      .catch(error => {
+        console.log(error);
       });
-  }
+    }
+  
+    //reset form state and submission value
+  const newGodis = () => {
+    setGodis(initialState);
+    setSubmitted(false);
+  };
 
-  //resets state so new godis can be added
-  newGodis() {
-    this.setState({
-      id: null,
-      name: "",
-      type: "",
-      rating: 0.0,
-      attributes: [],
-
-      submitted: false
-        
-    });
-  }
-
-  render() {
+  
     return (
         <div className="submit-form">
             {/* conditional rendering based on submit state */}
-          {this.state.submitted ? (
+          {submitted ? (
             <div>
               <h4>New godis created</h4>
               {/* calls newGodis function after successful creation */}
-              <button className="btn btn-success" onClick={this.newGodis}>
+              <button className="btn btn-success" onClick={newGodis}>
                 Add another
               </button>
             </div>
@@ -117,8 +83,8 @@ export default class AddGodis extends Component {
                   className="form-control"
                   id="name"
                   required
-                  value={this.state.name}
-                  onChange={this.onChangeName}
+                  value={godis.name}
+                  onChange={inputHandler}
                   name="name"
                 />
               </div>
@@ -130,8 +96,8 @@ export default class AddGodis extends Component {
                   className="form-control"
                   id="Type"
                   required
-                  value={this.state.type}
-                  onChange={this.onChangeType}
+                  value={godis.type}
+                  onChange={inputHandler}
                   name="type"
                 />
               </div>
@@ -143,8 +109,8 @@ export default class AddGodis extends Component {
                   className="form-control"
                   id="Rating"
                   required
-                  value={this.state.rating}
-                  onChange={this.onChangeRating}
+                  value={godis.rating}
+                  onChange={inputHandler}
                   name="rating"
                 />
               </div>
@@ -156,19 +122,19 @@ export default class AddGodis extends Component {
                   className="form-control"
                   id="Attributes"
                   required
-                  value={this.state.attributes.join(",")} //saves individuals values to array 
-                  onChange={this.onChangeAttributes}
+                  value={Array.isArray(godis.attributes) ? godis.attributes.join(",") : ""} //saves individuals values to array 
+                  onChange={inputHandler}
                   name="attributes"
                 />
               </div>
   
-              <button onClick={this.saveGodis} className="btn btn-success">
+              <button onClick={saveGodis} className="btn btn-success">
                 Submit
               </button>
             </div>
           )}
         </div>
       );
-    }
-  }
+    };
+  export default AddGodis;
 

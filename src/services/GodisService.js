@@ -1,34 +1,43 @@
 import axios from "../api/axiosConfig";
 
 //Service class for making http requests
-class GodisDataService {
-    getAll() {
+
+    const getAll = () => {
       return axios.get("/godis");
     }
 
-    findByName(name) {
+    const findByName =(name) => {
         return axios.get(`/godis/name/${name}`);
       }
   
-    getById(id) {
+    const getById = (id) => {
       return axios.get(`/godis/${id}`);
     }
   
-    create(data) {
+    const create = (data) => {
       return axios.post("/godis/add", data);
     }
   
-    update(id, data) {
+    const update = (id, data) => {
       return axios.put(`/godis/${id}`, data);
     }
   
-    deleteById(id) {
+    const deleteById =(id) => {
       return axios.delete(`/godis/delete/${id}`);
     }
   
-    deleteAll() {
-      return axios.delete(`/godis`);
+    const deleteAll = () => {
+      return axios.delete(`/godis/delete`);
     }
-  }
+
+    const GodisService = {
+      getAll,
+      findByName,
+      getById,
+      create,
+      update,
+      deleteById,
+      deleteAll
+    };
   
-  export default new GodisDataService();
+  export default GodisService;
