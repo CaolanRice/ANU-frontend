@@ -27,7 +27,7 @@ import axios from "../api/axiosConfig";
     }
   
     const deleteAll = () => {
-      return axios.delete(`/godis/delete`);
+      return axios.delete(`/godis/delete/all`);
     }
 
     const GodisService = {

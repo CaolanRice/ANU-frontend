@@ -1,45 +1,27 @@
-import React, { Component, useEffect, useState } from "react";
-import GodisDataService from "../services/GodisService";
+import React, { useEffect, useState } from "react";
+import GodisService from "../services/GodisService";
 import { Link } from "react-router-dom";
 
-export default class GodisList extends Component {
+const GodisList = () => {
   //initailize 
-  constructor(props) {
-    super(props);
-    this.onChangeSearchName = this.onChangeSearchName.bind(this);
-    this.fetchGodis = this.fetchGodis.bind(this);
-    this.refreshList = this.refreshList.bind(this);
-    this.setActiveGodis = this.setActiveGodis.bind(this);
-    this.removeAllGodis = this.removeAllGodis.bind(this);
-    this.searchName = this.searchName.bind(this);
+  const [godis, setGodis] = useState([]);
+  const [selectedGodis, setSelectedGodis] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const[searchName, setSearchName] = useState("");
 
-    this.state = {
-      godis: [],
-      currentGodis: null,
-      currentIndex: -1,
-      searchName: ""
-    };
-  }
-
-  //fetch data after component renders
-  componentDidMount() {
-    this.fetchGodis();
-  }
-
+    useEffect(() => {
+      getGodis();
+    }, []);
   
-  onChangeSearchName(event) {
+  const onChangeSearchName = (event) => {
     const searchName = event.target.value;
-    this.setState({
-      searchName: searchName
-    });
+    setSearchName(searchName);
   }
 
-  fetchGodis() {
-    GodisDataService.getAll()
+  const getGodis = () => {
+    GodisService.getAll()
       .then(response => {
-        this.setState({
-          godis: response.data
-        });
+        setGodis(response.data)
         console.log(response.data);
       })
       .catch(error => {
@@ -47,47 +29,40 @@ export default class GodisList extends Component {
       });
   }
 
-  refreshList() {
-    this.fetchGodis();
-    this.setState({
-      currentGodis: null,
-      currentIndex: -1
-    });
+  const refreshList = () => {
+    getGodis();
+    setSelectedGodis(null);
+    setSelectedIndex(-1);
+
   }
 
-  setActiveGodis(godis, index) {
-    this.setState({
-      currentGodis: godis,
-      currentIndex: index
-    });
+  const setActiveGodis = (godis, index) => {
+      setSelectedGodis(godis);
+      setSelectedIndex(index);
   }
 
-  removeAllGodis() {
-    GodisDataService.deleteAll()
+  const removeAllGodis = () => {
+    GodisService.deleteAll()
       .then(response => {
         console.log(response.data);
-        this.refreshList();
+        refreshList();
       })
       .catch(error => {
         console.log(error);
       });
   }
 
-  searchName() {
-    GodisDataService.findByName(this.state.searchName)
+  const findByName = () => {
+    GodisService.findByName(searchName)
       .then(response => {
-        this.setState({
-          godis: response.data
-        });
-        console.log(response.data);
+          setGodis(response.data)
+          console.log(response.data);
       })
       .catch(error => {
         console.log(error);
       });
   }
 
-  render() {
-    const { searchName, godis, currentGodis, currentIndex } = this.state;
     return (
       <div className="list row">
         <div className="col-md-8">
@@ -97,13 +72,13 @@ export default class GodisList extends Component {
               className="form-control"
               placeholder="Search by name"
               value={searchName}
-              onChange={this.onChangeSearchName}/>
+              onChange={onChangeSearchName}/>
               
             <div className="input-group-append">
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={this.searchName}>
+                onClick={findByName}>
                 Search
               </button>
             </div>
@@ -119,9 +94,9 @@ export default class GodisList extends Component {
                 <li
                   className={
                     "list-group-item " +
-                    (index === currentIndex ? "active" : "")
+                    (index === selectedIndex ? "active" : "")
                   }
-                  onClick={() => this.setActiveGodis(godis, index)}
+                  onClick={() => setActiveGodis(godis, index)}
                   key={index}
                   >
                   {godis.name}
@@ -131,44 +106,44 @@ export default class GodisList extends Component {
 
           <button
             className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllGodis}>
+            onClick={removeAllGodis}>
             Delete all
           </button>
         </div>
 
         <div className="col-md-6">
-          {currentGodis ? (
+          {selectedGodis ? (
             <div>
               <h4>Godis</h4>
               <div>
                 <label>
                   <strong>Name:</strong>
                 </label>{" "}
-                {currentGodis.name}
+                {selectedGodis.name}
               </div>
 
               <div>
                 <label>
                   <strong>Type:</strong>
                 </label>{" "}
-                {currentGodis.type}
+                {selectedGodis.type}
               </div>
 
               <div>
                 <label>
                   <strong>Rating:</strong>
                 </label>{" "}
-                {currentGodis.rating}
+                {selectedGodis.rating}
               </div>
 
               <div>
                 <label>
                   <strong>Attributes:</strong>
                 </label>{" "}
-                {currentGodis.attributes}
+                {selectedGodis.attributes}
               </div>
 
-              <Link to={"/godis" + currentGodis.id}
+              <Link to={"/godis" + selectedGodis.id}
                 className="badge badge-warning" >
                 Edit godis
               </Link>
@@ -182,5 +157,6 @@ export default class GodisList extends Component {
         </div>
       </div>
     );
-  }
-}
+} 
+
+export default GodisList;
