@@ -7,10 +7,10 @@ import './App.css';
 import GodisList from './components/GodisList';
 import DeleteGodis from './components/DeleteGodis';
 import AddGodis from "./components/AddGodis";
+import GodisInfo from "./components/GodisInfo";
 
 
-class App extends Component {
-  render() {
+function App() {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -36,11 +36,12 @@ class App extends Component {
             <Route path="/" element={<GodisList/>} />
             <Route path="/add" element={<AddGodis/>} />
             <Route path="/delete/:id" element={<DeleteGodis/>} />
+            <Route path="/godis/:id" element={<GodisInfo/>} />
           </Routes>
         </div>
       </div>
     );
   }
-}
+
 
 export default App;

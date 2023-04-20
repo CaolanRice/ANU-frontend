@@ -25,6 +25,7 @@ const GodisList = () => {
         console.log(response.data);
       })
       .catch(error => {
+        console.log
         console.log(error);
       });
   }
@@ -38,6 +39,8 @@ const GodisList = () => {
 
   const setActiveGodis = (godis, index) => {
       setSelectedGodis(godis);
+      console.log(godis);
+      console.log(godis.id);
       setSelectedIndex(index);
   }
 
@@ -51,6 +54,8 @@ const GodisList = () => {
         console.log(error);
       });
   }
+  // console.log(id);
+  // console.log(selectedGodis.id);
 
   const findByName = () => {
     GodisService.findByName(searchName)
@@ -143,7 +148,7 @@ const GodisList = () => {
                 {selectedGodis.attributes}
               </div>
 
-              <Link to={"/godis" + selectedGodis.id}
+              <Link to={"/godis/" + selectedGodis.id}
                 className="badge badge-warning" >
                 Edit godis
               </Link>
