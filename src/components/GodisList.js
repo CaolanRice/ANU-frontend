@@ -9,6 +9,7 @@ const GodisList = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const[searchName, setSearchName] = useState("");
 
+
     useEffect(() => {
       getGodis();
     }, []);
@@ -22,7 +23,6 @@ const GodisList = () => {
     GodisService.getAll()
       .then(response => {
         setGodis(response.data)
-        console.log(response.data);
       })
       .catch(error => {
         console.log
@@ -39,29 +39,33 @@ const GodisList = () => {
 
   const setActiveGodis = (godis, index) => {
       setSelectedGodis(godis);
-      console.log(godis);
-      console.log(godis.id);
       setSelectedIndex(index);
   }
 
   const removeAllGodis = () => {
     GodisService.deleteAll()
       .then(response => {
-        console.log(response.data);
         refreshList();
       })
       .catch(error => {
         console.log(error);
       });
   }
-  // console.log(id);
-  // console.log(selectedGodis.id);
+
+  const removeGodis = () => {
+    GodisService.deleteById(selectedGodis.id)
+      .then(response => {
+        refreshList();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   const findByName = () => {
     GodisService.findByName(searchName)
       .then(response => {
           setGodis(response.data)
-          console.log(response.data);
       })
       .catch(error => {
         console.log(error);
@@ -110,6 +114,12 @@ const GodisList = () => {
           </ul>
 
           <button
+            className="m-3 btn btn-sm btn-primary"
+            onClick={() => window.location.href = '/add'}>
+            Add new
+          </button>
+
+          <button
             className="m-3 btn btn-sm btn-danger"
             onClick={removeAllGodis}>
             Delete all
@@ -119,7 +129,7 @@ const GodisList = () => {
         <div className="col-md-6">
           {selectedGodis ? (
             <div>
-              <h4>Godis</h4>
+              <h4>Godis Information</h4>
               <div>
                 <label>
                   <strong>Name:</strong>
@@ -145,13 +155,19 @@ const GodisList = () => {
                 <label>
                   <strong>Attributes:</strong>
                 </label>{" "}
-                {selectedGodis.attributes}
+                {Array.isArray(selectedGodis.attributes) ? selectedGodis.attributes.join(",") : ""}
               </div>
 
-              <Link to={"/godis/" + selectedGodis.id}
-                className="badge badge-warning" >
-                Edit godis
-              </Link>
+            <button
+              className="m-3 btn btn-sm btn-info"
+              onClick={() => window.location.href = "/godis/" + selectedGodis.id}>
+              Edit godis
+            </button>
+
+            <button className="m-3 btn btn-sm btn-danger" onClick={removeGodis}>
+              Delete
+            </button>
+              
             </div>
           ) : (
             <div>

@@ -44,8 +44,7 @@ const AddGodis = () => {
           name: response.data.name,
           type: response.data.type,
           rating: response.data.rating,
-          attributes: response.data.atrributes
-          
+          attributes: response.data.atrributes    
         });
         setSubmitted(true);
         console.log(response.data);
@@ -67,15 +66,22 @@ const AddGodis = () => {
             {/* conditional rendering based on submit state */}
           {submitted ? (
             <div>
-              <h4>New godis created</h4>
+              <h4>New godis created!</h4>
               {/* calls newGodis function after successful creation */}
-              <button className="btn btn-success" onClick={newGodis}>
+              <button className="m-3 btn btn-sm btn-success" onClick={newGodis}>
                 Add another
               </button>
+              <button className="m-3 btn btn-sm btn-primary" onClick={() => window.location.href = '/'}>
+                Return to List
+              </button>
+
+
             </div>
           ) : (
             //if not submitted
+            
             <div>
+              <h4 style={{margin: "20px 15px 20px 20px",textAlign: "center"}}>Add new godis</h4>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
                 <input
@@ -83,7 +89,6 @@ const AddGodis = () => {
                   className="form-control"
                   id="name"
                   required
-                  value={godis.name}
                   onChange={inputHandler}
                   name="name"
                 />
@@ -96,20 +101,20 @@ const AddGodis = () => {
                   className="form-control"
                   id="Type"
                   required
-                  value={godis.type}
                   onChange={inputHandler}
                   name="type"
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="rating">Rating</label>
+                <label htmlFor="rating">Rating (0 - 10)</label>
                 <input
                   type="number"
+                  min = "0"
+                  max = "10"
                   className="form-control"
                   id="Rating"
                   required
-                  value={godis.rating}
                   onChange={inputHandler}
                   name="rating"
                 />
@@ -122,13 +127,12 @@ const AddGodis = () => {
                   className="form-control"
                   id="Attributes"
                   required
-                  value={Array.isArray(godis.attributes) ? godis.attributes.join(",") : ""} //saves individuals values to array 
                   onChange={inputHandler}
                   name="attributes"
                 />
               </div>
   
-              <button onClick={saveGodis} className="btn btn-success">
+              <button onClick={saveGodis} className="m-3 btn btn-sm btn-primary">
                 Submit
               </button>
             </div>

@@ -18,14 +18,9 @@ const GodisInfo = () => {
   const [message, setMessage] = useState("");
 
   const getGodis = id => {
-    console.log(id)
     GodisService.getById(id)
       .then(response => {
         setSelectedGodis(response.data);
-        console.log(response.data); 
-        // console.log(id) //correct objectId
-        // console.log(response.data.id) //returns undefined
-        // console.log(selectedGodis.id) //returns null
       })
       .catch(error => {
         console.log(error);
@@ -51,13 +46,10 @@ const GodisInfo = () => {
     const updateGodis = () => {
         // GodisService.update(id)
         GodisService.update(selectedGodis.id, selectedGodis)
-          .then(response => {
-            console.log(response.data);
-            setMessage("Updated successfully");
+          .then(() => {
+            setMessage(selectedGodis.name + " updated successfully");
           })
           .catch(error => {
-            // console.log(selectedGodis.id); //returns undefined
-            // console.log(id) //returns correct objectId
             console.log(error);
             setMessage("Update godis error")
           });
@@ -66,25 +58,21 @@ const GodisInfo = () => {
 
     const deleteGodis = () => {
         GodisService.deleteById(id)
-          .then(response => {
-            console.log(response.data);
+          .then(() => {
             navigate("/");
           })
           .catch(error => {
-            console.log(selectedGodis.id);
             console.log(error);
             setMessage("delete godis error")
           });
       };
 
-      // console.log(selectedGodis) 
-      // console.log(selectedGodis.id)
 
     return (
         <div>
         {selectedGodis ? (
           <div className="edit-form">
-            <h4>Godis</h4>
+            <h4 style={{margin: "20px 15px 20px 20px",textAlign: "center"}}>Update Godis</h4>
             <form>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
@@ -112,9 +100,11 @@ const GodisInfo = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="rating">Rating</label>
+                <label htmlFor="rating">Rating (0 - 10)</label>
                 <input
                   type="text"
+                  min = "0"
+                  max = "10"
                   className="form-control"
                   id="rating"
                   name="rating"
@@ -137,17 +127,14 @@ const GodisInfo = () => {
               </div>
             </form>
   
-            <button className="badge badge-danger mr-2" onClick={deleteGodis}>
+            <button className="m-3 btn btn-sm btn-info" onClick={updateGodis}>
+              Update
+            </button>
+
+            <button className="m-3 btn btn-sm btn-danger" onClick={deleteGodis}>
               Delete
             </button>
   
-            <button
-              type="submit"
-              className="badge badge-success"
-              onClick={updateGodis}
-            >
-              Update
-            </button>
             <p>{message}</p>
           </div>
         ) : (
@@ -158,7 +145,6 @@ const GodisInfo = () => {
         )}
       </div>
     );
-
 }
 
 export default GodisInfo;
