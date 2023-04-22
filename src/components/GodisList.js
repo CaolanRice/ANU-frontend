@@ -14,11 +14,6 @@ const GodisList = () => {
       getGodis();
     }, []);
   
-  const onChangeSearchName = (event) => {
-    const searchName = event.target.value;
-    setSearchName(searchName);
-  }
-
   const getGodis = () => {
     GodisService.getAll()
       .then(response => {
@@ -28,19 +23,18 @@ const GodisList = () => {
         console.log
         console.log(error);
       });
-  }
+  };
 
   const refreshList = () => {
     getGodis();
     setSelectedGodis(null);
     setSelectedIndex(-1);
-
-  }
+  };
 
   const setActiveGodis = (godis, index) => {
       setSelectedGodis(godis);
       setSelectedIndex(index);
-  }
+  };
 
   const removeAllGodis = () => {
     GodisService.deleteAll()
@@ -50,7 +44,7 @@ const GodisList = () => {
       .catch(error => {
         console.log(error);
       });
-  }
+  };
 
   const removeGodis = () => {
     GodisService.deleteById(selectedGodis.id)
@@ -60,17 +54,28 @@ const GodisList = () => {
       .catch(error => {
         console.log(error);
       });
-  }
+  };
 
-  const findByName = () => {
-    GodisService.findByName(searchName)
+  const findByName = name => {
+    setSearchName(name);
+    if (name === ""){
+      GodisService.getAll()
+        .then(response =>{
+          setGodis(response.data)
+        })
+        .catch(error =>{
+          console.log(error)
+        });
+    } else {  
+    GodisService.findByName(name)
       .then(response => {
           setGodis(response.data)
       })
       .catch(error => {
         console.log(error);
       });
-  }
+    }
+  };
 
     return (
       <div className="list row">
@@ -81,16 +86,7 @@ const GodisList = () => {
               className="form-control"
               placeholder="Search by name"
               value={searchName}
-              onChange={onChangeSearchName}/>
-              
-            <div className="input-group-append">
-              <button
-                className="btn btn-outline-secondary"
-                type="button"
-                onClick={findByName}>
-                Search
-              </button>
-            </div>
+              onChange={event => findByName(event.target.value)}/>
           </div>
         </div>
 
