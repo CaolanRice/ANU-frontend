@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import GodisService from "../services/GodisService";
-import { Link } from "react-router-dom";
 
 const GodisList = () => {
-  //initailize 
   const [godis, setGodis] = useState([]);
   const [selectedGodis, setSelectedGodis] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const[searchName, setSearchName] = useState("");
+  const [selectedType, setSelectedType] = useState("");
 
 
     useEffect(() => {
@@ -77,7 +76,24 @@ const GodisList = () => {
     }
   };
 
+  const findByType = type => {
+    setSelectedType(type);
+    if (type === "") {
+      refreshList()
+    } else {
+      setSelectedGodis(null);
+      GodisService.findByType(type)
+        .then(response => {
+          setGodis(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
+
     return (
+      //search bar
       <div className="list row">
         <div className="col-md-8">
           <div className="input-group mb-3">
@@ -86,16 +102,32 @@ const GodisList = () => {
               className="form-control"
               placeholder="Search by name"
               value={searchName}
-              onChange={event => findByName(event.target.value)}/>
+              // call the findByName function and pass the current value of the input field as an argument
+              onChange={event => findByName(event.target.value)}/> 
           </div>
         </div>
 
+        {/* type filter dropdown menu */}
+        <div className="col-md-4">
+        <div className="form-group">
+          <label htmlFor="typeFilter">Filter by Type:</label>
+          <select
+            className="form-control"
+            id="typeFilter"
+            value={selectedType}
+            onChange={event => findByType(event.target.value)}>
+            <option value="">All Types</option>
+            <option value="Chocolate">Chocolate</option>
+            <option value="Sweets">Sweets</option>
+          </select>
+        </div>
+      </div>
 
+        {/* current list of godis */}
         <div className="col-md-6">
           <h4>Godis List</h4>
           <ul className="list-group">
-            {godis &&
-              godis.map((godis, index) => (
+          {Array.isArray(godis) && godis.map((godis, index) => (
                 <li
                   className={
                     "list-group-item " +
@@ -121,7 +153,8 @@ const GodisList = () => {
             Delete all
           </button>
         </div>
-
+        
+        {/* selected godis info panel */}
         <div className="col-md-6">
           {selectedGodis ? (
             <div>

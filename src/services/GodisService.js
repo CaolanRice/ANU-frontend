@@ -6,9 +6,13 @@ import axios from "../api/axiosConfig";
       return axios.get("/godis");
     }
 
-    const findByName =(name) => {
+    const findByName = (name) => {
         return axios.get(`/godis/name/${name}`);
       }
+    
+    const findByType = (type) => {
+        return axios.get(`/godis/type/${type}`);
+      };
   
     const getById = (id) => {
       return axios.get(`/godis/${id}`);
@@ -37,7 +41,8 @@ import axios from "../api/axiosConfig";
       create,
       update,
       deleteById,
-      deleteAll
+      deleteAll,
+      findByType
     };
   
   export default GodisService;
